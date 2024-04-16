@@ -13,6 +13,8 @@ import java.util.Scanner;
 public class Game extends JPanel {
     private Player player;
     private boolean[][] walls;
+    private int objectX ;
+    private int objectY ;
 
     public Game(){
         setPreferredSize(new Dimension(Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT));
@@ -28,6 +30,15 @@ public class Game extends JPanel {
                 movePlayer(keyCode);
             }
         });
+        addMouseMotionListener(new MouseAdapter() {
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                objectX = e.getX();
+                objectY = e.getY();
+                repaint();
+            }
+        });
+
     }
     private void loadMapFromFile(String filePath){
         try (Scanner scanner = new Scanner(new File(filePath))){
@@ -58,6 +69,7 @@ public class Game extends JPanel {
         }
     }
 
+
     @Override
     public void paint(Graphics g){
         super.paint(g);
@@ -65,6 +77,7 @@ public class Game extends JPanel {
 
         if(player!=null){
             player.render(g2d);
+            player.rotateTowards(objectX, objectY);
         }
 
         for (int x = 0; x<walls.length; x++){
@@ -74,6 +87,11 @@ public class Game extends JPanel {
                     g2d.fillRect(x*Constants.CELL_SIZE, y*Constants.CELL_SIZE, Constants.CELL_SIZE, Constants.CELL_SIZE);     //painting walls
                 }
             }
+        }
+        if (player != null) {
+
+            g2d.setColor(Color.RED);
+            g2d.drawLine(player.getX() + Constants.CELL_SIZE / 2, player.getY(), objectX, objectY);
         }
     }
 

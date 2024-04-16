@@ -7,12 +7,14 @@ import org.example.utils.Constants;
 public class Player extends Entity {
     private int velocityX; // Horizontal velocity
     private int velocityY; // Vertical velocity
+    private double rotation;
 
 
     public Player(int x, int y, int width, int height, int maxHealth) {
         super(x, y, width, height, maxHealth);
         this.velocityX = 0;
         this.velocityY = 0;
+        this.rotation = 0;
     }
 
 
@@ -21,6 +23,17 @@ public class Player extends Entity {
 
         x += velocityX;
         y += velocityY;
+    }
+
+    public void rotateTowards(int targetX, int targetY) {
+        // Calculate the angle between the player and the target position
+        double angle = Math.atan2(targetY - (y + modelHeight / 2), targetX - (x + modelWidth / 2));
+
+        // Convert the angle from radians to degrees
+        double angleDegrees = Math.toDegrees(angle);
+
+        // Set the rotation angle for the player
+        rotation = angleDegrees;
     }
 
     @Override
@@ -43,6 +56,12 @@ public class Player extends Entity {
         } else if (y + modelHeight > Constants.SCREEN_HEIGHT) {
             y = Constants.SCREEN_HEIGHT - modelHeight;
         }
+    }
+    public int getX(){
+        return x;
+    }
+    public int getY(){
+        return y;
     }
 }
 
